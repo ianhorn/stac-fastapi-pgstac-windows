@@ -1,16 +1,16 @@
-ARG PYTHON_VERSION=3.12
+FROM ianhorn/python311-nanoserver:1.0.2 as base
 
-FROM python:${PYTHON_VERSION}-slim as base
+ENV GIT_INSTALLER_URL https://github.com/git-for-windows/git/releases/download/v2.42.0.windows.1/Git-2.42.0-64-bit.exe
 
-# Any python libraries that require system libraries to be installed will likely
-# need the following packages in order to build
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y build-essential git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Download and silently install Git, then add to PATH
+RUN curl -o git-installer.exe %GIT_INSTALLER_URL% && \
+    start /wait git-installer.exe /silent /norestart /log git-install.log && \
+    del git-installer.exe && \
+    python -m pip install -e ./stac_fastapi/types[dev] && \
+    python -m pip install -e ./stac_fastapi/api[dev] && \
+    python -m pip install -e ./stac_fastapi/extensions[dev]
 
-ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+RUN setx PATH "%PATH%;C:\Program Files\Git\bin;C:\Program Files\Git\cmd"
 
 FROM base as builder
 
