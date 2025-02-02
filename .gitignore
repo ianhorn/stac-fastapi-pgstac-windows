@@ -1,5 +1,5 @@
 .mypy_cache
-
+PortableGit
 PIP_EXTRA_INDEX_URL
 !tests/resources/*.jpg
 **.pyc
@@ -132,3 +132,4 @@ venv
 
 # IDE
 .vscode
+Git.zip
