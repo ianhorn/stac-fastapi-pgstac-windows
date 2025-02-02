@@ -7,4 +7,14 @@ RUN pip install -r requirements.txt && \
     python -m pip install pypgstac && \
     python -m pip install "psycopg[binary,pool]"
 
+# RUN mkdir C:\pgsql && \
+#     C:\Powershell\pwsh.exe -Command \
+#     "Invoke-WebRequest -Uri "https://get.enterprisedb.com/postgresql/postgresql-16.1-1-windows-x64-binaries.zip" -OutFile "C:\temp\psql.zip; \
+#     Expand-Archive -Path C:\cd temp\psql.zip -Destination pgsql; \
+#     Move-Item C:\pgsql\pgsql -Destination C:\pgsql; \
+#     Remove-Item C:\Temp\pgsql"
+
+COPY /pgsql C:/
+
+RUN set PATH=%PATH%;C:\Powershell;C:\pgsql\bin\
 RUN python -m pip install -e .[dev,server] --user
