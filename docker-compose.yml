@@ -1,7 +1,7 @@
 services:
   app:
     container_name: sfp
-    image: ianhorn/nanoserver:1.0.0
+    # im age: ianhorn/nanoserver:ltsc2022-1.0.2
     build: .
     environment:
       - APP_HOST=0.0.0.0
@@ -11,8 +11,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASS=postgres
       - POSTGRES_DBNAME=postgis
-      - POSTGRES_HOST_READER=postgresql://postgres:postgis@localhost:5432/postgis
-      - POSTGRES_HOST_WRITER=postgresql://postgres:postgis@localhost:5432/postgis
+      - POSTGRES_HOST_READER=localhost
+      - POSTGRES_HOST_WRITER=localhost
       - POSTGRES_PORT=5432
       - WEB_CONCURRENCY=10
       - VSI_CACHE=TRUE
@@ -25,10 +25,23 @@ services:
       - "8082:8082"
     # volumes:
     #   - .:/app
-    # depends_on:
-    #   - database
-    command: cmd /c "C:/app/scripts/wait-for-it.cmd postgis:5432 && python -m stac_fastapi.pgstac.app"
+    depends_on:
+      - database
+    command: cmd /c "C:/app/scripts/wait-for-it.cmd postgis:5439 && python -m stac_fastapi.pgstac.app"
 
+  database:
+    container_name: stac-db
+    image: ianhorn/postgis-windows:15-3.4-2022
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgis
+      - PGUSER=postgis
+      - PGPASSWORD=postgis
+      - PGDATABASE=postgis
+    ports:
+      - "5439:5432"
+    command: postgres -N 500
   # tests:
   #   container_name: sfp-test
   #   image: ianhorn/nanoserver:1.0.0

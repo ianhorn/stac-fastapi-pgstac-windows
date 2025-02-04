@@ -16,5 +16,5 @@ RUN pip install -r requirements.txt && \
 
 COPY /pgsql C:/
 
-RUN set PATH=%PATH%;C:\Powershell;C:\pgsql\bin\
+RUN set PATH=%PATH%;C:\Powershell;C:\pgsql\bin\;C:\app\pgsql\pgsql\bin
 RUN python -m pip install -e .[dev,server] --user

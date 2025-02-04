@@ -134,4 +134,4 @@ venv
 .vscode
 Git.zip
 
-pgsql/*
+pgsql
