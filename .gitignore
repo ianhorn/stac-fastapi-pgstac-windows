@@ -132,3 +132,6 @@ venv
 
 # IDE
 .vscode
+Git.zip
+pgsql
+PortableGit
