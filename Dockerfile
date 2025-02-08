@@ -1,23 +1,9 @@
-ARG PYTHON_VERSION=3.12
+FROM ianhorn/stac-fastapi-windows:servercore-ltsc2022-1.0.0
 
-FROM python:${PYTHON_VERSION}-slim as base
+# WORKDIR C:/app
 
-# Any python libraries that require system libraries to be installed will likely
-# need the following packages in order to build
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y build-essential git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+COPY stac_fastapi/pgstac stac_fastapi
 
-ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-
-FROM base as builder
-
-WORKDIR /app
-
-COPY . /app
-
-RUN python -m pip install -e .[server]
+RUN python -m pip install stac-fastapi.pgstac
 
 CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8080"]
