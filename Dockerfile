@@ -1,23 +1,19 @@
 ARG PYTHON_VERSION=3.12
 
-FROM python:${PYTHON_VERSION}-slim as base
+FROM docker pull mcr.microsoft.com/windows-cssc/python:3.11-servercore-ltsc2022 as base
 
-# Any python libraries that require system libraries to be installed will likely
-# need the following packages in order to build
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y build-essential git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Install chocolatey as package manager
+RUN powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 
-ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+# Install psql-client
+RUN refreshenv && \
+    choco install psql -y && \
+    refreshenv
 
 FROM base as builder
 
-WORKDIR /app
+RUN python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions
 
-COPY . /app
-
-RUN python -m pip install -e .[server]
+RUN python -m pip install stac-fastapi.pgstac
 
 CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8080"]
