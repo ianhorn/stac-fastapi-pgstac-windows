@@ -11,7 +11,6 @@ RUN refreshenv && \
 
 ENV PATH="C:/Python312;C:/Python312/Scripts;C:/ProgramData/chocolatey/bin;${PATH}"
 
-
 FROM base as builder
 
 WORKDIR /app
@@ -19,8 +18,6 @@ WORKDIR /app
 COPY /app .
 
 COPY /app/stac_fastapi /stac_fastapi
-
-
 
 RUN python -m pip install --upgrade pip && \
     python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
