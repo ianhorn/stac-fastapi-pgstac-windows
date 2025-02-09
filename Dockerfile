@@ -7,9 +7,10 @@ RUN powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [Syst
 RUN refreshenv && \
     choco install python312 -y && \
     choco install psql -y && \
+    choco install git -y && \
     refreshenv
 
-ENV PATH="C:/Python312;C:/Python312/Scripts;C:/ProgramData/chocolatey/bin;${PATH}"
+ENV PATH="C:/Python312;C:/Python312/Scripts;C:/ProgramData/chocolatey/bin;C:/Program Files/Git/bin;C:/Program Files/Git/cmd;${PATH}"
 
 FROM base as builder
 
@@ -18,6 +19,8 @@ WORKDIR /app
 COPY /app .
 
 COPY /app/stac_fastapi /stac_fastapi
+
+COPY /scripts .
 
 RUN python -m pip install --upgrade pip && \
     python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
