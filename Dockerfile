@@ -20,7 +20,7 @@ COPY /app .
 
 COPY /app/stac_fastapi /stac_fastapi
 
-COPY /scripts .
+COPY /scripts /scripts
 
 RUN python -m pip install --upgrade pip && \
     python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
