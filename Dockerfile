@@ -9,14 +9,22 @@ RUN refreshenv && \
     choco install psql -y && \
     refreshenv
 
-ENV PATH'="C:/Python312;C:/Python312/Scripts;C:/ProgramData/chocolatey/bin;${PATH}"
+ENV PATH="C:/Python312;C:/Python312/Scripts;C:/ProgramData/chocolatey/bin;${PATH}"
+
 
 FROM base as builder
 
-RUN python -m pip install && \
-    python -m pip install stac-fastapi.types && \
-    python -m pip install stac-fastapi.api && \
-    python -m pip-install stac-fastapi.extensions && \
-    python -m pip install stac-fastapi.pgstac
+WORKDIR /app
+
+COPY /app .
+
+COPY /app/stac_fastapi /stac_fastapi
+
+
+
+RUN python -m pip install --upgrade pip && \
+    python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
+    python -m pip install stac-fastapi.pgstac && \
+    python -m pip install uvicorn
 
 CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8080"]
