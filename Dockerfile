@@ -16,6 +16,8 @@ FROM base as builder
 
 WORKDIR /app
 
+RUN mkdir scripts
+
 COPY /app .
 
 COPY /app/stac_fastapi /stac_fastapi
