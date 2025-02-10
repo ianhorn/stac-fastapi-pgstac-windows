@@ -2,6 +2,7 @@ services:
   app:
     container_name: stac-fastapi-pgstac
     image: ianhorn/stac-fastapi-pgstac:1.0.0
+    build: .
     environment:
       - APP_HOST=0.0.0.0
       - APP_PORT=8082
@@ -21,18 +22,31 @@ services:
       - DB_MAX_CONN_SIZE=1
       - USE_API_HYDRATE=${USE_API_HYDRATE:-false}
     ports:
-      - "80:8082"
+      - "8082:8082"
     # volumes:
     #   - .:/app
     depends_on:
       - database
     command: bash -c "./scripts/wait-for-it.sh database:5432 && python -m stac_fastapi.pgstac.app"
 
+  # tests:
+  #   container_name: stac-fastapi-pgstac-test
+  #   image: stac-utils/stac-fastapi-pgstac-test
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.tests
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - ENVIRONMENT=local
+  #     - DB_MIN_CONN_SIZE=1
+  #     - DB_MAX_CONN_SIZE=1
+  #     - USE_API_HYDRATE=${USE_API_HYDRATE:-false}
+  #   command: bash -c "python -m pytest -s -vv"
+
   database:
     container_name: stac-db
     image: ianhorn/pgstac-windows:2022
-    volumes: 
-      - pgstac_data:C:\pgdata
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -43,9 +57,24 @@ services:
       - "5432:5432"
     command: postgres -N 500
 
+  # Load joplin demo dataset into the PGStac Application
+  # loadjoplin:
+  #   image: stac-utils/stac-fastapi-pgstac
+  #   environment:
+  #     - ENVIRONMENT=development
+  #   volumes:
+  #     - ./stac_fastapi:/app/stac_fastapi
+  #     - ./scripts:/app/scripts
+  #   command: >
+  #     /bin/sh -c "
+  #       ./scripts/wait-for-it.sh -t 60 app:8082 &&
+  #       python -m pip install requests &&
+  #       python /app/scripts/ingest_joplin.py http://app:8082
+  #       "
+  #   depends_on:
+  #     - database
+  #     - app
+
 networks:
   default:
     name: stac-fastapi-network
-
-volumes:
-  pgstac_data:
