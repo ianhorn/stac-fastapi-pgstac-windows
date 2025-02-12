@@ -16,7 +16,7 @@ FROM base as builder
 
 WORKDIR /app
 
-COPY /app .
+COPY . .
 
 RUN python -m pip install --upgrade pip && \
     python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
