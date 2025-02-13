@@ -1,7 +1,7 @@
 services:
   app:
     container_name: stac-fastapi-pgstac
-    image: stac-fastapi-pgstac:1.0.1
+    image: ianhorn/stac-fastapi-pgstac:1.0.1
     build: .
     environment:
       - APP_HOST=0.0.0.0
