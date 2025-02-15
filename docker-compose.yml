@@ -1,8 +1,7 @@
 services:
   app:
     container_name: stac-fastapi-pgstac
-    image: ianhorn/stac-fastapi-pgstac:1.0.1
-    build: .
+    image:  ianhorn/stac-fastapi-pgstac:ltsc2022-1.0.3
     environment:
       - APP_HOST=0.0.0.0
       - APP_PORT=8082
@@ -46,7 +45,9 @@ services:
 
   database:
     container_name: stac-db
-    image: ianhorn/pgstac-windows:2022
+    image: ianhorn/pgstac-windows:ltsc2022-1.0.2
+    volumes: 
+      - pgstac-vol:C:\pgdata
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -78,3 +79,6 @@ services:
 networks:
   default:
     name: stac-fastapi-network
+
+volumes:
+  pgstac-vol:
