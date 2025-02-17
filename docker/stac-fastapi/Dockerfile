@@ -4,8 +4,6 @@ FROM base as builder
 
 USER "NT Authority\System"
 
-
-
 WORKDIR /app
 
 COPY /app .

@@ -1,7 +1,7 @@
 services:
   app:
     container_name: stac-fastapi-pgstac
-    image: ianhorn/stac-fastapi-pgstac:1.0.0
+    image: stac-fastapi-pgstac
     build: .
     environment:
       - APP_HOST=0.0.0.0
@@ -27,7 +27,7 @@ services:
     #   - .:/app
     depends_on:
       - database
-    command: bash -c "./scripts/wait-for-it.sh database:5432 && python -m stac_fastapi.pgstac.app"
+    command: cmd /c "C:/app/scripts/wait-for-it.cmd database:5432 -t 30 && python -m stac_fastapi.pgstac.app"
 
   # tests:
   #   container_name: stac-fastapi-pgstac-test
@@ -46,7 +46,9 @@ services:
 
   database:
     container_name: stac-db
-    image: ianhorn/pgstac-windows:2022
+    image: ianhorn/pgstac-windows:nano2022-v1.0.3
+    volumes:
+      - pgdata:C:/data/pgdata
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -54,7 +56,7 @@ services:
       - PGUSER=postgis
       - PGPASSWORD=postgis
     ports:
-      - "5432:5432"
+      - "5439:5432"
     command: postgres -N 500
 
   # Load joplin demo dataset into the PGStac Application
@@ -78,3 +80,6 @@ services:
 networks:
   default:
     name: stac-fastapi-network
+
+volumes:
+  pgdata:
