@@ -1,5 +1,5 @@
 .mypy_cache
-
+psqlhelp
 PIP_EXTRA_INDEX_URL
 !tests/resources/*.jpg
 **.pyc
@@ -17,6 +17,7 @@ model/
 *.jpg
 **.save.*
 **.bak
+misc
 .DS_Store
 .mvn/
 

@@ -7,8 +7,11 @@ WORKDIR /app
 COPY /app .
 
 RUN python -m pip install --upgrade pip && \
-    python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
-    python -m pip install stac-fastapi.pgstac && \
     python -m pip install uvicorn
+
+FROM base as stacbuilder
+
+RUN python -m pip install stac-fastapi.types stac-fastapi.api stac-fastapi.extensions && \
+    python -m pip install stac-fastapi.pgstac
 
 CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8080"]
