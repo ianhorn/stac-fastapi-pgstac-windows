@@ -57,7 +57,7 @@ services:
       - PGPASSWORD=postgis
     ports:
       - "5432:5432"
-    command: postgres -N 500 && setup-db.bat
+    command: postgres -N 500
 
   # Load joplin demo dataset into the PGStac Application
   # loadjoplin:
