@@ -4,7 +4,7 @@ services:
     image: stac-fastapi-pgstac
     build: .
     volumes:
-      - "C:/api/app:C:/app"
+      - "E:/stac-fastapi-pgstac-windows/app:C:/app"
     environment:
       - STAC_FASTAPI_TITLE=${STAC_FASTAPI_TITLE}
       - STAC_FASTAPI_DESCRIPTION=${STAC_FASTAPI_DESCRIPTION}
@@ -12,7 +12,7 @@ services:
       - APP_HOST=0.0.0.0
       - APP_PORT=8082
       - RELOAD=true
-      - ENVIRONMENT=local
+      - ENVIRONMENT=dev
       - POSTGRES_USER=postgres
       - POSTGRES_PASS=postgres
       - POSTGRES_DBNAME=postgis
@@ -26,12 +26,14 @@ services:
       - DB_MIN_CONN_SIZE=1
       - DB_MAX_CONN_SIZE=1
       - USE_API_HYDRATE=${USE_API_HYDRATE:-false}
+      - BASE_URL=kygislicserv.ky.gov/stac-api
+      - ROOT_PATH=/stac-api
+      - API_URL=https://kygislicserv.ky.gov/stac/api.html
     ports:
       - "8082:8082"
     depends_on:
       - database
     command: cmd /c "python -m stac_fastapi.pgstac.app"
-
   # tests:
   #   container_name: stac-fastapi-pgstac-test
   #   image: stac-utils/stac-fastapi-pgstac-test
@@ -49,9 +51,9 @@ services:
 
   database:
     container_name: stac-db
-    image: ianhorn/pgstac:nano2022
+    image: ianhorn/pgstac:nano2022-1.0.3
     volumes:
-      - pgdata:C:/data/pgdata
+      - pgdata:C:/pgsql/pgdata
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
